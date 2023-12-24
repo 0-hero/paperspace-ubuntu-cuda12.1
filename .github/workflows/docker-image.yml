@@ -1,0 +1,20 @@
+name: Push the Docker image
+on:
+ push:
+   branches: [ main ]
+ pull_request:
+   branches: [ main ]
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   steps:
+   - uses: actions/checkout@v3
+   - name: Log in to Docker Hub
+     env:
+       DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+       DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+     run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+   - name: Build Docker image
+     run: |
+       docker build -t 0hero/paperspace-ubuntu-cuda12.1 .
+       docker push 0hero/paperspace-ubuntu-cuda12.1
